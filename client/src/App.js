@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -25,7 +25,6 @@ const App = () => {
     loading
   } = useSelector((state) => state.cards);
 
-  const scrollVariable = useRef(null);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [pageLimit, setPageLimit] = useState(20);
   const [api, contextHolder] = notification.useNotification();
@@ -38,17 +37,21 @@ const App = () => {
   };
 
   window.onscroll = function () {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      if (cards?.length < total) {
-        if (searchKeyword) {
-          if (cards.length >= 20) {
-            setPageLimit(pageLimit + 20)
+    setTimeout(() => {
+      if(!loading) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+          if (cards?.length < total) {
+            if (searchKeyword) {
+              if (cards.length >= 20) {
+                setPageLimit(pageLimit + 20)
+              }
+            } else {
+              setPageLimit(pageLimit + 20)
+            }
           }
-        } else {
-          setPageLimit(pageLimit + 20)
         }
       }
-    }
+    }, 1200)
   };
 
   const handleSearch = debounce((value) => {
@@ -64,12 +67,6 @@ const App = () => {
   }, [searchKeyword, pageLimit]);
 
   useEffect(() => {
-    if (scrollVariable && scrollVariable.current) {
-      scrollVariable.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [cards]);
-
-  useEffect(() => {
     if (err) {
       openNotificationWithIcon('error', 'Error', err);
       dispatch(SetCardsState({ field: 'err', value: '' }));
@@ -77,7 +74,7 @@ const App = () => {
   }, [err]);
 
   return(
-    <div style={{maxWidth: '1366px', margin: '0 auto'}} ref={scrollVariable}>
+    <div style={{maxWidth: '1366px', margin: '0 auto'}}>
       {contextHolder}
       <Input
         onChange={(e) => handleSearch(e.target.value)}
@@ -85,30 +82,28 @@ const App = () => {
         placeholder="Enter a name ..."
       />
       {
-        loading ? (
+        loading && (
           <div className="loader-main">
             <div class="loader"></div>
           </div>
         )
-        : (
-          <div>
-            <Row gutter={[16,24]}>
-              {cards?.map((element, i) => (
-                <Col span={4}>
-                <Card
-                  key={i}
-                  bordered={false}
-                  hoverable
-                  cover={<img alt={element.name} src={element.imageUrl || NoImage} height={250} />}
-                >
-                  {element.name}
-                </Card>
-                </Col>
-              ))}
-            </Row>
-          </div>
-        )
       }
+        <div>
+          <Row gutter={[16,24]}>
+            {cards?.map((element, i) => (
+              <Col span={4}>
+              <Card
+                key={i}
+                bordered={false}
+                hoverable
+                cover={<img alt={element.name} src={element.imageUrl || NoImage} height={250} />}
+              >
+                {element.name}
+              </Card>
+              </Col>
+            ))}
+          </Row>
+        </div>
 
     </div>
   )

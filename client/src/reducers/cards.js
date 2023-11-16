@@ -53,7 +53,7 @@ const cards = createSlice({
     [GetCards.pending]: (state) => ({
       ...state,
       err: null,
-      // loading: true,
+      loading: true,
       success: false
     }),
     [GetCards.fulfilled]: (state, action) => ({
