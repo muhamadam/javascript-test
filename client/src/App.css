@@ -1,0 +1,39 @@
+.App {
+  text-align: center;
+}
+.loader-main{
+  position:fixed;
+  background:rgba(255,255,255,0.9);
+  width: 100%;
+  height:100%;
+  z-index: 1;
+  left:0;
+}
+
+.loader {
+  width: 15px;
+  aspect-ratio: 1;
+  background: #000;
+  border-radius: 50%;
+  animation: l6 1s infinite linear alternate;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ant-input-group-wrapper{
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+  margin-right: 0;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+@keyframes l6 {
+  0%  {box-shadow: 15px 0,-25px 0}
+  50% {box-shadow: 15px 0,-15px 0}
+  100%{box-shadow: 25px 0,-15px 0}
+}
